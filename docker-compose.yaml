@@ -1,0 +1,56 @@
+services:
+  app:
+    build:
+      context: ./docker/php #utilise notre Dockerfile dans le dossier php pour créer une image avec le nom <nom-du-dossier>-<nom-du-service>
+    container_name: laravel-app
+    volumes:
+      - ./laravel:/var/www # connecte le dossier laravel du pc au conteneur
+    command: sh -c "composer install && php-fpm"
+    working_dir: /var/www # répertoire de travail dans le conteneur
+    # ports: # pas nécessaire d'exposer le port 9000 du conteneur php, il y a seulement nginx qui passe par ce port
+    #   - "9000:9000" # expose le port 9000 du conteneur app
+    networks:
+      - flashmind # connecte le conteneur à notre réseau flashmind (réseau local dans le conteneur)
+
+
+  node:
+    image: node:20
+    container_name: vite-node
+    working_dir: /var/www
+    volumes:
+      - ./laravel:/var/www
+    command: sh -c "npm install && npm run dev" # quand le conteneur démarre, il exécute la commande npm install et ensuite npm run dev
+    ports:
+      - "5173:5173" #pour Vite
+    networks:
+      - flashmind
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - "8080:80" # expose le port 80 du conteneur nginx sur le port 8080 de notre machine
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # connecte le fichier de conf nginx du pc au conteneur
+      - ./laravel:/var/www
+    depends_on:
+      - app # démarre après le conteneur php
+    networks:
+      - flashmind
+  
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434" # expose le port 11434 du conteneur sur le port 11434 de notre machine
+    volumes:
+      - ollama_data:/root/.ollama # connecte le dossier ollama du pc au conteneur
+    networks:
+      - flashmind
+  
+networks:
+  flashmind:
+    driver: bridge
+
+volumes:
+  ollama_data:
