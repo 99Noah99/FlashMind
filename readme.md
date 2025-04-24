@@ -22,13 +22,13 @@ FlashMind est une application qui permet de générer des **flashcards** à part
 1. **Cloner le projet depuis GitHub** :
    ```bash
    git clone https://github.com/votre-utilisateur/FlashMind.git
-   cd flashmind
+   cd FlashMind
    ```
 
 2. **Mise ne place .env laravel** :
    ```bash
+   cd laravel/
    cp .env.example .env
-   php artisan key:generate
    ```
 
 3. **Vérification de Docker et Docker Compose** :
@@ -45,5 +45,12 @@ FlashMind est une application qui permet de générer des **flashcards** à part
      ```
      Cela va télécharger les images nécessaires et démarrer les conteneurs pour Laravel, Node.js (pour Vite), Nginx, et Ollama.
 
-5. **Accéder à l'application dans le navigateur** :
-   - **Nginx (Laravel)** : Accédez à l'application Laravel via `http://localhost:8080`.
+5. **Générer la key laravel** :
+- Assurez-vous que Docker a bien fini de créer le dossier /vendor de laravel (cela peut prendre du temps):
+   ```bash
+   cd laravel/
+   php artisan key:generate
+   ```
+
+6. **Accéder à l'application dans le navigateur** :
+   - **Nginx (Laravel)** : Accédez à l'application Laravel via `http://localhost:8080` --> peut prendre du temps pour la première requete.
