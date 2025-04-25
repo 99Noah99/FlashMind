@@ -15,7 +15,7 @@ export default defineConfig({
         port: 5173,
         strictPort: true,
         hmr: {
-            host: 'localhost', // spécifier que le conteneur pour communiquer avec le conteneur vite doivent passer par vite-node:5173 au lieu de localhost:5173
+            host: 'localhost', // spécifier que le conteneur pour communiquer avec le conteneur vite
         },
     },
 });

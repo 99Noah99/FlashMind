@@ -17,10 +17,4 @@ RUN apt-get update && apt-get install -y \
 # Installer Composer (le gestionnaire de dépendances PHP)
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# # Installer le CLI Laravel globalement
-# RUN composer global require laravel/installer
-
-# # Ajouter le dossier binaire de Composer global à la variable PATH
-# ENV PATH="/root/.composer/vendor/bin:${PATH}"
-
 WORKDIR /var/www

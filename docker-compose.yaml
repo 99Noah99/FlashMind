@@ -5,10 +5,8 @@ services:
     container_name: laravel-app
     volumes:
       - ./laravel:/var/www # connecte le dossier laravel du pc au conteneur
-    command: sh -c "composer install && php-fpm"
     working_dir: /var/www # répertoire de travail dans le conteneur
-    # ports: # pas nécessaire d'exposer le port 9000 du conteneur php, il y a seulement nginx qui passe par ce port
-    #   - "9000:9000" # expose le port 9000 du conteneur app
+    command: sh -c "composer install && php-fpm && chown -R $USER:www-data /var/www/storage /var/www/bootstrap/cache"
     networks:
       - flashmind # connecte le conteneur à notre réseau flashmind (réseau local dans le conteneur)
 
