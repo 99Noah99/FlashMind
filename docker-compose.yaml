@@ -2,18 +2,22 @@ services:
   app:
     build:
       context: ./docker/php #utilise notre Dockerfile dans le dossier php pour créer une image avec le nom <nom-du-dossier>-<nom-du-service>
-    container_name: laravel-app
+      args:
+        USER_ID: 1000    # mettez la valeur de votre utilisateur WSL
+        GROUP_ID: 1000
+    container_name: laravel-php
     volumes:
       - ./laravel:/var/www # connecte le dossier laravel du pc au conteneur
     working_dir: /var/www # répertoire de travail dans le conteneur
-    command: sh -c "composer install && php-fpm && chown -R $USER:www-data /var/www/storage /var/www/bootstrap/cache"
+    command: sh -c "composer install && php-fpm"
     networks:
       - flashmind # connecte le conteneur à notre réseau flashmind (réseau local dans le conteneur)
 
 
   node:
-    image: node:20
-    container_name: vite-node
+    build:
+      context: ./docker/node
+    container_name: node-vite
     working_dir: /var/www
     volumes:
       - ./laravel:/var/www
