@@ -14,6 +14,14 @@ export default defineConfig({
         tailwindcss(),
         react(),
     ],
+
+    resolve: {
+        alias: {
+            '@': '/resources/js',
+            '@components': '/resources/js/Components',
+            '@pages': '/resources/js/Pages',
+        }
+    },
     server: {
         host: '0.0.0.0',
         port: 5173,
