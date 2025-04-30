@@ -20,6 +20,7 @@ export default defineConfig({
             '@': '/resources/js',
             '@components': '/resources/js/Components',
             '@pages': '/resources/js/Pages',
+            '@styles': '/resources/css',
         }
     },
     server: {
