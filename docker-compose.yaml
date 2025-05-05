@@ -41,7 +41,8 @@ services:
       - flashmind
   
   ollama:
-    image: ollama/ollama:latest
+    build:
+      context: ./docker/ollama
     container_name: ollama
     ports:
       - "11434:11434" # expose le port 11434 du conteneur sur le port 11434 de notre machine
@@ -49,8 +50,6 @@ services:
       - ollama_data:/root/.ollama # connecte le dossier ollama du pc au conteneur
     networks:
       - flashmind
-    # entrypoint: sh -c "ollama serve && sleep 5 && ollama pull llama3:8b && killall ollama"
-
   
 networks:
   flashmind:
