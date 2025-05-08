@@ -1,28 +1,27 @@
 import Header from "@components/Header";
 import { useState } from 'react'
-import { useForm, usePage, router } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 
 
 export default function Home() {
 
-    const { props } = usePage();
+    const [csv_file, setCSV_file] = useState(null);
 
-    const { data, setData, post, processing, onSuccess, onError, reset } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         value: '',
         type: '',
     });
-
-    function handleChange(event) {
-        setData(event.target.name, event.target.value);
-    }
 
     function handleSubmit(event) {
         event.preventDefault(); // Empêche le rechargement de la page
         post('/generate', {
             preserveScroll: true,
             preserveUrl: true,
-        })
-
+            onSuccess: (response) => {
+                setCSV_file(response.props.response_csv_file);
+                console.log(response.props.response_csv_file);
+            }
+        });
     }
 
     return (
@@ -46,16 +45,16 @@ export default function Home() {
                             <textarea
                                 className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-3 w-full max-w-5xl h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
                                 rows="5"
-                                name="value"
+                                name="text_area"
                                 value={data.value}
-                                onChange={handleChange}
+                                onChange={(e) => console.log(e) & setData('value', e.target.value)}
                                 placeholder="Entrez votre texte ici..." />
                         </div>
                         <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-4">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
                         </button>
                     </form>
-                    {props.response && <div className="text-green-500">{props.response}</div>}
+                    {csv_file && <div className="text-green-500">{csv_file}</div>}
                 </section>
 
                 <section className="flex flex-row items-center justify-center mt-5">
