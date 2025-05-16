@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Zain&display=swap" rel="stylesheet">
     @viteReactRefresh
     @vite('resources/js/app.jsx')
+    @routes
     @inertiaHead
   </head>
   <body>

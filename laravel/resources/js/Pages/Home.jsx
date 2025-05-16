@@ -1,11 +1,12 @@
 import Header from "@components/Header";
-import { useState } from 'react'
-import { useForm } from '@inertiajs/react'
+import { useState } from 'react';
+import { useForm } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 
 
 export default function Home() {
 
-    const [csv_file, setCSV_file] = useState(null);
+    const [csv_file_name, setCsv_file_name] = useState(null);
 
     const { data, setData, post, processing, errors } = useForm({
         value: '',
@@ -18,8 +19,8 @@ export default function Home() {
             preserveScroll: true,
             preserveUrl: true,
             onSuccess: (response) => {
-                setCSV_file(response.props.response_csv_file);
-                console.log(response.props.response_csv_file);
+                setCsv_file_name(response.props.response_csv_file_name);
+                console.log(response.props.response_csv_file_name);
             }
         });
     }
@@ -47,14 +48,21 @@ export default function Home() {
                                 rows="5"
                                 name="text_area"
                                 value={data.value}
-                                onChange={(e) => console.log(e) & setData('value', e.target.value)}
+                                onChange={(e) => setData('value', e.target.value)}
                                 placeholder="Entrez votre texte ici..." />
                         </div>
                         <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-4">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
                         </button>
                     </form>
-                    {csv_file && <div className="text-green-500">{csv_file}</div>}
+                    {csv_file_name && (
+                        <a
+                            href={route('download_csv', { csv_file_name })}
+                            className="bg-green-500 text-white rounded-lg p-2 mt-4 hover:bg-green-600 transition duration-300 active:bg-green-700"
+                        >
+                            Télécharger le CSV
+                        </a>
+                    )}
                 </section>
 
                 <section className="flex flex-row items-center justify-center mt-5">
