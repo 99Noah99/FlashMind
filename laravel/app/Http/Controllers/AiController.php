@@ -22,6 +22,19 @@ class AiController extends Controller
 
     public function generate(Request $request)
     {
+
+        // Valider les données du formulaire
+        $request->validate(
+            [
+                'value' => 'required|string',
+            ],
+            [
+                'value.required' => 'Le texte est requis.',
+                'value.string' => 'Le texte doit être une chaîne de caractères.',
+            ]
+        );
+
+
         // Récupérer les données envoyées depuis le formulaire
         $text = $request->value;
         $type = $request->type;

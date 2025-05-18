@@ -1,4 +1,5 @@
 import Header from "@components/Header";
+import { Toaster, toast } from 'sonner'
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
@@ -21,7 +22,10 @@ export default function Home() {
             onSuccess: (response) => {
                 setCsv_file_name(response.props.response_csv_file_name);
                 console.log(response.props.response_csv_file_name);
-            }
+            },
+            onError: (errors) => {
+                toast.error(errors.value);
+            },
         });
     }
 
@@ -29,6 +33,7 @@ export default function Home() {
         <>
             <Header />
             <div>
+                <Toaster position="top-right" richColors />
                 <section className="flex flex-col items-center justify-center h-100 gap-20 px-10">
                     <div className="text-7xl text-center text-violet-700 font-bold">
                         Apprennez plus rapidement que l'éclair !
@@ -51,7 +56,7 @@ export default function Home() {
                                 onChange={(e) => setData('value', e.target.value)}
                                 placeholder="Entrez votre texte ici..." />
                         </div>
-                        <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-4">
+                        <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-4 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
                         </button>
                     </form>
@@ -68,7 +73,7 @@ export default function Home() {
                 <section className="flex flex-row items-center justify-center mt-5">
                     <iframe src="https://lottie.host/embed/0542db4c-0237-4f8b-bf93-7a665b68ae4d/dErSlc4KIm.lottie"></iframe>
                 </section>
-            </div>
+            </div >
         </>
     );
 }
