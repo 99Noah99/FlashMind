@@ -11,17 +11,19 @@ export default function Home() {
 
     const { data, setData, post, processing, errors } = useForm({
         value: '',
+        number: 5,
         type: '',
     });
 
     function handleSubmit(event) {
         event.preventDefault(); // Empêche le rechargement de la page
+        setCsv_file_name(null);
         post('/generate', {
             preserveScroll: true,
             preserveUrl: true,
             onSuccess: (response) => {
                 setCsv_file_name(response.props.response_csv_file_name);
-                console.log(response.props.response_csv_file_name);
+                toast.success('Flashcards générées avec succès !');
             },
             onError: (errors) => {
                 toast.error(errors.value);
@@ -50,13 +52,17 @@ export default function Home() {
                         <div className="flex justify-center items-center w-full px-10">
                             <textarea
                                 className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-3 w-full max-w-5xl h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
-                                rows="5"
+                                rows="7"
                                 name="text_area"
                                 value={data.value}
                                 onChange={(e) => setData('value', e.target.value)}
                                 placeholder="Entrez votre texte ici..." />
                         </div>
-                        <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-4 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
+                        <div className="flex flex-row items-center justify-center gap-3 w-full max-w-5xl mt-4">
+                            <label>Nombre de flashcards à générer : </label>
+                            <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" quvalue={data.number} onChange={(e) => setData('number', e.target.value)} />
+                        </div>
+                        <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-6 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
                         </button>
                     </form>

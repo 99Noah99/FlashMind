@@ -27,18 +27,24 @@ class AiController extends Controller
         $request->validate(
             [
                 'value' => 'required|string',
+                'number' => 'required|integer|min:1|max:100',
             ],
             [
                 'value.required' => 'Le texte est requis.',
                 'value.string' => 'Le texte doit être une chaîne de caractères.',
+
+                'number.required' => 'Le nombre de flashcards est requis.',
+                'number.integer' => 'Le nombre de flashcards doit être un entier.',
+                'number.min' => 'Le nombre de flashcards doit être au moins 1.',
+                'number.max' => 'Le nombre de flashcards ne peut pas dépasser 100.',
             ]
         );
 
 
         // Récupérer les données envoyées depuis le formulaire
         $text = $request->value;
+        $nombre = $request->number;
         $type = $request->type;
-        $nombre = 10;
 
         $prompt = "Voici un texte à analyser : " . $text . ". Génère " . $nombre . " de flashcards. C'est-à-dire " . $nombre . " questions et leurs " . $nombre . " réponses correspondantes.";
 
