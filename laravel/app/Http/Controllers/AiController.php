@@ -8,6 +8,7 @@ use Prism\Prism\Schema\ObjectSchema;
 use Prism\Prism\Schema\ArraySchema;
 use Prism\Prism\Schema\StringSchema;
 use Inertia\Inertia;
+use Smalot\PdfParser\Parser;
 
 //services
 use App\Services\CsvMakerService;
@@ -22,12 +23,12 @@ class AiController extends Controller
 
     public function generate(Request $request)
     {
-
         // Valider les données du formulaire
         $request->validate(
             [
                 'value' => 'required|string',
                 'number' => 'required|integer|min:1|max:100',
+                'type' => 'required|in:texte,pdf',
             ],
             [
                 'value.required' => 'Le texte est requis.',
@@ -37,14 +38,28 @@ class AiController extends Controller
                 'number.integer' => 'Le nombre de flashcards doit être un entier.',
                 'number.min' => 'Le nombre de flashcards doit être au moins 1.',
                 'number.max' => 'Le nombre de flashcards ne peut pas dépasser 100.',
+
+                'type.required' => 'Le type de contenu est requis.',
+                'type.in' => 'Le type de contenu doit être soit "text" soit "pdf".',
             ]
         );
 
-
         // Récupérer les données envoyées depuis le formulaire
-        $text = $request->value;
         $nombre = $request->number;
         $type = $request->type;
+
+        //Si le type est PDF, on parse le contenu du fichier
+        if ($type === 'pdf') {
+            $file = $request->value;
+            $parser = new Parser();
+            $pdf = $parser->parseFile($file);
+            $text = $pdf->getText();
+        } elseif ($type === 'texte') {
+            // Si le type est texte, on utilise le texte tel quel
+            $text = $request->value;
+        } else {
+            return response()->json(['error' => 'Type de contenu non supporté'], 400);
+        }
 
         $prompt = "Voici un texte à analyser : " . $text . ". Génère " . $nombre . " de flashcards. C'est-à-dire " . $nombre . " questions et leurs " . $nombre . " réponses correspondantes.";
 

@@ -1,4 +1,6 @@
 import Header from "@components/Header";
+import Select from "@components/Select";
+
 import { Toaster, toast } from 'sonner'
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
@@ -9,10 +11,10 @@ export default function Home() {
 
     const [csv_file_name, setCsv_file_name] = useState(null);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, progress, errors } = useForm({
         value: '',
         number: 5,
-        type: '',
+        type: 'texte',
     });
 
     function handleSubmit(event) {
@@ -47,25 +49,56 @@ export default function Home() {
 
                 <section className="flex flex-col w-full justify-center items-center">
 
-                    <div>Copier votre texte juste ici : </div>
-                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center w-full max-w-5xl">
-                        <div className="flex justify-center items-center w-full px-10">
-                            <textarea
-                                className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-3 w-full max-w-5xl h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
-                                rows="7"
-                                name="text_area"
-                                value={data.value}
-                                onChange={(e) => setData('value', e.target.value)}
-                                placeholder="Entrez votre texte ici..." />
-                        </div>
-                        <div className="flex flex-row items-center justify-center gap-3 w-full max-w-5xl mt-4">
+                    <Select
+                        type={data.type}
+                        setType={(value) => setData('type', value)}
+                    />
+
+                    <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center mt-8 w-full max-w-5xl">
+                        {data.type === "pdf"
+                            ?
+                            <>
+                                <div> Déposez votre pdf juste ici : </div>
+                                <input type="file"
+                                    accept="application/pdf"
+                                    className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-2 focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
+                                    onChange={(e) => setData('value', e.target.files[0])}
+                                    required
+                                />
+                                <i class="fa-solid fa-plus" style="color: #7008e7;"></i>
+                            </>
+                            :
+                            <>
+                                < div > Copier votre texte juste ici : </div>
+                                <div className="flex justify-center items-center w-full px-10">
+                                    <textarea
+                                        className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-3 w-full max-w-5xl h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
+                                        rows="7"
+                                        name="text_area"
+                                        value={data.value}
+                                        onChange={(e) => setData('value', e.target.value)}
+                                        placeholder="Entrez votre texte ici..." />
+                                </div>
+                            </>
+                        }
+
+
+                        <div className="flex flex-row items-center justify-center gap-3 w-full max-w-5xl mt-15">
                             <label>Nombre de flashcards à générer : </label>
-                            <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" quvalue={data.number} onChange={(e) => setData('number', e.target.value)} />
+                            <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" value={data.number} onChange={(e) => setData('number', e.target.value)} />
                         </div>
+
                         <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-6 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
+                            {progress && (
+                                <progress value={progress.percentage} max="100">
+                                    {progress.percentage}%
+                                </progress>
+                            )}
                         </button>
+
                     </form>
+
                     {csv_file_name && (
                         <a
                             href={route('download_csv', { csv_file_name })}
@@ -74,7 +107,8 @@ export default function Home() {
                             Télécharger le CSV
                         </a>
                     )}
-                </section>
+
+                </section >
 
                 <section className="flex flex-row items-center justify-center mt-5">
                     <iframe src="https://lottie.host/embed/0542db4c-0237-4f8b-bf93-7a665b68ae4d/dErSlc4KIm.lottie"></iframe>
