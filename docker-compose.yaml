@@ -9,7 +9,7 @@ services:
     volumes:
       - ./laravel:/var/www # connecte le dossier laravel du pc au conteneur
     working_dir: /var/www # répertoire de travail dans le conteneur
-    command: sh -c "composer install && php-fpm"
+    command: sh -c "composer install && php-fpm" # php-fpm permet de démarrer le serveur PHP
     networks:
       - flashmind # connecte le conteneur à notre réseau flashmind (réseau local dans le conteneur)
 

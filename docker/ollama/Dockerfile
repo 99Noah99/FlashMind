@@ -5,7 +5,7 @@ COPY Modelfile /Modelfile
 RUN ollama serve & \
     sleep 5 && \
     ollama create FlashCardGenerator -f ./Modelfile && \
-    ollama rm llama3.1
+    ollama rm gemma3:4b
 
 ENTRYPOINT ["ollama", "serve"]
 
