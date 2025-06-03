@@ -5,6 +5,8 @@ import { Toaster, toast } from 'sonner'
 import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Home() {
@@ -59,13 +61,19 @@ export default function Home() {
                             ?
                             <>
                                 <div> Déposez votre pdf juste ici : </div>
-                                <input type="file"
-                                    accept="application/pdf"
-                                    className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-2 focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all"
-                                    onChange={(e) => setData('value', e.target.files[0])}
-                                    required
-                                />
-                                <i class="fa-solid fa-plus" style="color: #7008e7;"></i>
+                                <div className="relative w-full max-w-md">
+                                    <input
+                                        type="file"
+                                        accept="application/pdf"
+                                        className="bg-gray-100 border-2 border-dashed border-violet-700 rounded-lg p-3 w-full cursor-pointer focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all pr-10"
+                                        onChange={(e) => setData('value', e.target.files[0])}
+                                        required
+                                    />
+                                    <FontAwesomeIcon
+                                        icon={faPlus}
+                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-violet-700 cursor-pointer"
+                                    />
+                                </div>
                             </>
                             :
                             <>
