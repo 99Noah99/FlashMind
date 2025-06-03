@@ -14,8 +14,8 @@ ARG GROUP_ID=1000
 # - pdo et pdo_mysql : pour la gestion des bases de données MySQL avec PDO.
 # - zip : pour manipuler des fichiers ZIP dans PHP.
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libonig-dev \ 
-    && docker-php-ext-install pdo pdo_mysql zip
+    git curl zip unzip libzip-dev libonig-dev imagemagick ghostscript\ 
+    && docker-php-ext-install pdo pdo_mysql zip 
 
 RUN groupadd -g $GROUP_ID devgroup \
     && useradd -u $USER_ID -g devgroup -m devuser
