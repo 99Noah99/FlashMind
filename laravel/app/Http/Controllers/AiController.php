@@ -23,32 +23,39 @@ class AiController extends Controller
 
     public function generate(Request $request)
     {
+        // Définir les règles de validation dynamiques
+        $rules = [
+            'number' => 'required|integer|min:1|max:100',
+            'type' => 'required|in:texte,pdf',
+        ];
+
+        if ($request->type === 'texte') {
+            $rules['value'] = 'required|string';
+        } elseif ($request->type === 'pdf') {
+            $rules['value'] = 'required|file|mimes:pdf'; // Fichier PDF, taille max 2MB
+        }
+
         // Valider les données du formulaire
-        $request->validate(
-            [
-                'value' => 'required|string',
-                'number' => 'required|integer|min:1|max:100',
-                'type' => 'required|in:texte,pdf',
-            ],
-            [
-                'value.required' => 'Le texte est requis.',
-                'value.string' => 'Le texte doit être une chaîne de caractères.',
+        $request->validate($rules, [
+            'value.required' => 'Le champ est requis.',
+            'value.string' => 'Le texte doit être une chaîne de caractères.',
+            'value.file' => 'Le fichier doit être valide.',
+            'value.mimes' => 'Le fichier doit être au format PDF.',
 
-                'number.required' => 'Le nombre de flashcards est requis.',
-                'number.integer' => 'Le nombre de flashcards doit être un entier.',
-                'number.min' => 'Le nombre de flashcards doit être au moins 1.',
-                'number.max' => 'Le nombre de flashcards ne peut pas dépasser 100.',
+            'number.required' => 'Le nombre de flashcards est requis.',
+            'number.integer' => 'Le nombre de flashcards doit être un entier.',
+            'number.min' => 'Le nombre de flashcards doit être au moins 1.',
+            'number.max' => 'Le nombre de flashcards ne peut pas dépasser 100.',
 
-                'type.required' => 'Le type de contenu est requis.',
-                'type.in' => 'Le type de contenu doit être soit "text" soit "pdf".',
-            ]
-        );
+            'type.required' => 'Le type de contenu est requis.',
+            'type.in' => 'Le type de contenu doit être soit "texte" soit "pdf".',
+        ]);
 
         // Récupérer les données envoyées depuis le formulaire
         $nombre = $request->number;
         $type = $request->type;
 
-        //Si le type est PDF, on parse le contenu du fichier
+        // Si le type est PDF, on parse le contenu du fichier
         if ($type === 'pdf') {
             $file = $request->value;
             $parser = new Parser();

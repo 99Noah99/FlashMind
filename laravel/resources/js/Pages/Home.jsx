@@ -85,7 +85,9 @@ export default function Home() {
                                         name="text_area"
                                         value={data.value}
                                         onChange={(e) => setData('value', e.target.value)}
-                                        placeholder="Entrez votre texte ici..." />
+                                        placeholder="Entrez votre texte ici..."
+                                        required
+                                    />
                                 </div>
                             </>
                         }
@@ -93,16 +95,11 @@ export default function Home() {
 
                         <div className="flex flex-row items-center justify-center gap-3 w-full max-w-5xl mt-15">
                             <label>Nombre de flashcards à générer : </label>
-                            <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" value={data.number} onChange={(e) => setData('number', e.target.value)} />
+                            <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" value={data.number} onChange={(e) => setData('number', e.target.value)} required />
                         </div>
 
                         <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-6 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
-                            {progress && (
-                                <progress value={progress.percentage} max="100">
-                                    {progress.percentage}%
-                                </progress>
-                            )}
                         </button>
 
                     </form>
