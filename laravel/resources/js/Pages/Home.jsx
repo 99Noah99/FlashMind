@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Home() {
 
     const [csv_file_name, setCsv_file_name] = useState(null);
 
-    const { data, setData, post, processing, progress, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         value: '',
         number: 5,
         type: 'texte',
@@ -98,8 +98,21 @@ export default function Home() {
                             <input type="number" name="number_of_flashcards" min="1" max="100" className="text-center bg-gray-50 border-b-2 border-violet-700 rounded-sm p-1 w-full max-w-15 h-auto focus:outline-none focus:shadow-[0px_5px_10px_rgba(112,8,231,0.30)] transition-all" value={data.number} onChange={(e) => setData('number', e.target.value)} required />
                         </div>
 
-                        <button type="submit" disabled={processing} className="bg-violet-700 text-white rounded-lg p-3 mt-6 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900">
+                        <button
+                            type="submit"
+                            disabled={processing}
+                            className="bg-violet-700 text-white rounded-lg p-3 mt-6 cursor-pointer hover:bg-violet-800 transition duration-300 active:bg-violet-900"
+                        >
                             {processing ? 'En cours...' : 'Générer mes flashcards'}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => reset()} // Réinitialise le formulaire
+                            className="flex items-center gap-1 text-black my-7 cursor-pointer hover:underline"
+                        >
+                            <span>Réinitialiser</span>
+                            <FontAwesomeIcon icon={faRotateRight} />
                         </button>
 
                     </form>
